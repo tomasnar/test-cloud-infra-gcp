@@ -13,8 +13,8 @@ data "aws_subnet_ids" "all" {
 
 # Amazon Linux latest (x64)
 data "aws_ami" "amazonlinux" {
-  most_recent      = true
-  owners           = ["amazon"]
+  most_recent = true
+  owners      = ["amazon"]
 
   filter {
     name   = "name"

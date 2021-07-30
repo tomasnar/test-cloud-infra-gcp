@@ -12,7 +12,7 @@ module "region_1" {
 # }
 
 module "asg_1" {
-    source  = "./asg"
-    name = "test-instance1"
-    vpc_id = module.region_1.vpc_id
+  source = "./asg"
+  name   = "test-instance1"
+  vpc_id = module.region_1.vpc_id
 }

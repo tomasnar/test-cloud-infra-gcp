@@ -17,7 +17,7 @@ resource "aws_elb" "web-elb" {
   name = "${var.name}-elb"
 
   # The same availability zone as our instances
-  subnets = data.aws_subnet_ids.all.ids
+  subnets         = data.aws_subnet_ids.all.ids
   security_groups = [aws_security_group.default.id]
   listener {
     instance_port     = 22
@@ -36,22 +36,22 @@ resource "aws_elb" "web-elb" {
 }
 
 resource "aws_autoscaling_group" "web-asg" {
-  vpc_zone_identifier  = data.aws_subnet_ids.all.ids
-  name                 = "${var.name}-asg"
-  max_size             = var.asg_max
-  min_size             = var.asg_min
-  desired_capacity     = var.asg_desired
-  force_delete         = true
+  vpc_zone_identifier = data.aws_subnet_ids.all.ids
+  name                = "${var.name}-asg"
+  max_size            = var.asg_max
+  min_size            = var.asg_min
+  desired_capacity    = var.asg_desired
+  force_delete        = true
   launch_template {
     id      = aws_launch_template.launch_template.id
     version = "$Latest"
   }
-  
-  load_balancers       = [aws_elb.web-elb.name]
+
+  load_balancers = [aws_elb.web-elb.name]
 
   tag {
     key                 = "Name"
-    value               = "${var.name}"
+    value               = var.name
     propagate_at_launch = "true"
   }
 }
@@ -63,8 +63,8 @@ resource "aws_launch_template" "launch_template" {
 
   # Security group
   vpc_security_group_ids = [aws_security_group.default.id]
-  user_data       = filebase64("${path.module}/userdata.sh")
-  key_name        = aws_key_pair.keypair.key_name
+  user_data              = filebase64("${path.module}/userdata.sh")
+  key_name               = aws_key_pair.keypair.key_name
 }
 
 # Our default security group to access
