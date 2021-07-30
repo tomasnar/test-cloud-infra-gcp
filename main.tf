@@ -1,3 +1,19 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+
+  backend "remote" {
+    organization = "tomasnar"
+
+    workspaces {
+      name = "tomasnar"
+    }
+  }
+}
+
 module "region_1" {
   source          = "./region"
   region          = var.region
