@@ -56,6 +56,15 @@ resource "aws_autoscaling_group" "web-asg" {
   }
 }
 
+resource "aws_autoscaling_schedule" "asg-turnoff" {
+  scheduled_action_name  = "asg-turnoff"
+  min_size               = 0
+  max_size               = 0
+  desired_capacity       = 0
+  recurrence             = "0 18 * * ? *"
+  autoscaling_group_name = aws_autoscaling_group.web-asg.name
+}
+
 resource "aws_launch_template" "launch_template" {
   name          = "${var.name}-template"
   image_id      = data.aws_ami.amazonlinux.image_id
