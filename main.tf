@@ -1,34 +1,72 @@
+locals {
+  project_id = tomasnar-test-terraform
+  region = asia-southeast1
+}
+
 terraform {
   required_providers {
-    aws = {
-      source = "hashicorp/aws"
+    google = {
+      source = "hashicorp/google"
     }
   }
-
-  backend "remote" {
+  cloud {
     organization = "tomasnar"
-
     workspaces {
-      name = "tomasnar"
+      name = "tomasnar-gcp"
     }
   }
 }
 
-module "region_1" {
-  source          = "./region"
-  region          = var.region
-  base_cidr_block = var.base_cidr_block
-  name_prefix     = "test-network1"
+provider "google" {
+  project     = local.project_id
+  region      = local.region
 }
 
-# module "us-west-2" {
-#   source          = "./region"
-#   region          = "us-west-2"
-#   base_cidr_block = var.base_cidr_block
-# }
+module "vpc" {
+    source  = "terraform-google-modules/network/google"
+    version = "~> 4.0"
 
-module "asg_1" {
-  source = "./asg"
-  name   = "test-instance1"
-  vpc_id = module.region_1.vpc_id
+    network_name = "perkunas-vpc"
+    routing_mode = "REGIONAL"
+    project_id = local.project_id
+
+    subnets = [
+        {
+            subnet_name           = "subnet-01"
+            subnet_ip             = "10.10.10.0/24"
+            subnet_region         = local.region
+            subnet_private_access = "true"
+        },
+        {
+            subnet_name           = "subnet-02"
+            subnet_ip             = "10.10.20.0/24"
+            subnet_region         = local.region
+            subnet_private_access = "true"
+        },
+        {
+            subnet_name               = "subnet-03"
+            subnet_ip                 = "10.10.30.0/24"
+            subnet_region         = local.region
+            subnet_private_access = "true"
+        }
+    ]
+
+    routes = [
+        {
+            name                   = "egress-internet"
+            description            = "route through IGW to access internet"
+            destination_range      = "0.0.0.0/0"
+            tags                   = "egress-inet"
+            next_hop_internet      = "true"
+        },
+        {
+            name                   = "app-proxy"
+            description            = "route through proxy to reach app"
+            destination_range      = "10.50.10.0/24"
+            tags                   = "app-proxy"
+            next_hop_instance      = "app-proxy-instance"
+            next_hop_instance_zone = "us-west1-a"
+        },
+    ]
+    delete_default_internet_gateway_routes = true
 }
