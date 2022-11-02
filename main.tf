@@ -1,6 +1,6 @@
 locals {
-  project_id = tomasnar-test-terraform
-  region = asia-southeast1
+  project_id = "tomasnar-test-terraform"
+  region = "asia-southeast1"
 }
 
 terraform {
