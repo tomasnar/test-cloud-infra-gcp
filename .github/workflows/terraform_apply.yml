@@ -49,10 +49,10 @@ on:
 
 jobs:
   terraform:
+    name: 'Terraform'
     permissions:
       id-token: write
       contents: read
-    name: 'Terraform'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
