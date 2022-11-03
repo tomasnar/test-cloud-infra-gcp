@@ -22,6 +22,11 @@ provider "google" {
   region      = local.region
 }
 
+provider "google-beta" {
+  project     = local.project_id
+  region      = local.region
+}
+
 module "vpc" {
     source  = "terraform-google-modules/network/google"
     version = "~> 4.0"
@@ -43,12 +48,6 @@ module "vpc" {
             subnet_region         = local.region
             subnet_private_access = "true"
         },
-        {
-            subnet_name               = "subnet-03"
-            subnet_ip                 = "10.10.30.0/24"
-            subnet_region         = local.region
-            subnet_private_access = "true"
-        }
     ]
 
     routes = [
@@ -61,4 +60,21 @@ module "vpc" {
         },
     ]
     delete_default_internet_gateway_routes = true
+}
+
+module "instance_template" {
+  source              = "terraform-google-modules/vm/google//modules/instance_template"
+  project_id          = local.project_id
+  network             = module.vpc.subnets_self_links[0]
+  source_image_family = "ubuntu-2004-lts"
+  disk_size_gb        = 20
+}
+
+module "mig" {
+  source            = "terraform-google-modules/vm/google//modules/mig"
+  project_id        = local.project_id
+  region            = local.region
+  target_size       = 3
+  hostname          = "perkunas-cluster"
+  instance_template = module.instance_template.self_link
 }
