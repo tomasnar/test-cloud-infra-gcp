@@ -68,6 +68,10 @@ module "instance_template" {
   network             = module.vpc.subnets_self_links[0]
   source_image_family = "ubuntu-2004-lts"
   disk_size_gb        = 20
+  service_account     = {
+                          email = module.service_account.email
+                          scopes = ["cloud-platform"]
+                        }
 }
 
 module "mig" {
@@ -77,4 +81,15 @@ module "mig" {
   target_size       = 3
   hostname          = "perkunas-cluster"
   instance_template = module.instance_template.self_link
+}
+
+module "service_account" {
+  source        = "terraform-google-modules/service-accounts/google"
+  version       = "~> 3.0"
+  project_id    = local.project_id
+  prefix        = "sa-vm"
+  names         = ["cluster"]
+  project_roles = []
+  display_name  = "vm sa"
+  description   = "VM Service account"
 }
