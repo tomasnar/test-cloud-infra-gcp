@@ -65,7 +65,7 @@ module "vpc" {
 module "instance_template" {
   source               = "terraform-google-modules/vm/google//modules/instance_template"
   project_id           = local.project_id
-  network              = module.vpc.subnets_self_links[0]
+  network              = module.vpc.subnets_names[0]
   source_image_project = "ubuntu-os-cloud"
   source_image_family  = "ubuntu-2004-lts"
   disk_size_gb         = 20
