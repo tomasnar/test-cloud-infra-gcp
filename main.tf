@@ -85,7 +85,8 @@ resource "google_compute_firewall" "ssh" {
 module "instance_template" {
   source               = "terraform-google-modules/vm/google//modules/instance_template"
   project_id           = local.project_id
-  subnetwork              = module.vpc.subnets_names[0]
+  subnetwork           = module.vpc.subnets_names[0]
+  machine_type         = "e2-micro"
   source_image_project = "ubuntu-os-cloud"
   source_image_family  = "ubuntu-2204-lts"
   disk_size_gb         = 20
