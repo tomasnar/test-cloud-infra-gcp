@@ -79,7 +79,7 @@ resource "google_compute_firewall" "ssh" {
     protocol = "tcp"
     ports    = ["22"]
   }
-  source_ranges = ["58.182.175.57/32"]
+  source_ranges = ["35.235.240.0/20"]
 }
 
 module "instance_template" {
@@ -110,7 +110,7 @@ module "service_account" {
   project_id    = local.project_id
   prefix        = "sa-vm"
   names         = ["cluster"]
-  project_roles = ["roles/iap.tunnelResourceAccessor"]
+  project_roles = []
   display_name  = "vm sa"
   description   = "VM Service account"
 }
