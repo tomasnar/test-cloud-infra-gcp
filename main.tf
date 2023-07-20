@@ -73,7 +73,7 @@ module "vpc" {
 resource "google_compute_firewall" "ssh" {
   project = local.project_id
   name    = "allow-ssh"
-  network = module.vpc.name
+  network = module.vpc.network_name
 
   allow {
     protocol = "tcp"
