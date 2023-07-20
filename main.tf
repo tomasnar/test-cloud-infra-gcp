@@ -50,16 +50,36 @@ module "vpc" {
         },
     ]
 
-    routes = [
-        {
-            name                   = "egress-internet"
-            description            = "route through IGW to access internet"
-            destination_range      = "0.0.0.0/0"
-            tags                   = "egress-inet"
-            next_hop_internet      = "true"
-        },
-    ]
+    # routes = [
+    #     {
+    #         name                   = "egress-internet"
+    #         description            = "route through IGW to access internet"
+    #         destination_range      = "0.0.0.0/0"
+    #         tags                   = "egress-inet"
+    #         next_hop_internet      = "true"
+    #     },
+    # ]
     delete_default_internet_gateway_routes = true
+}
+
+# module "nat" {
+#   source  = "terraform-google-modules/cloud-nat/google//examples/nat_with_compute_engine"
+#   version = "4.1.0"
+#   project     = local.project_id
+#   region      = local.region
+#   subnet      = 
+# }
+
+resource "google_compute_firewall" "ssh" {
+  project = local.project_id
+  name    = "allow-ssh"
+  network = module.vpc.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+  source_ranges = ["58.182.175.57/32"]
 }
 
 module "instance_template" {
@@ -67,7 +87,7 @@ module "instance_template" {
   project_id           = local.project_id
   subnetwork              = module.vpc.subnets_names[0]
   source_image_project = "ubuntu-os-cloud"
-  source_image_family  = "ubuntu-2004-lts"
+  source_image_family  = "ubuntu-2204-lts"
   disk_size_gb         = 20
   service_account      = {
                            email = module.service_account.email
@@ -90,7 +110,7 @@ module "service_account" {
   project_id    = local.project_id
   prefix        = "sa-vm"
   names         = ["cluster"]
-  project_roles = []
+  project_roles = ["roles/iap.tunnelResourceAccessor"]
   display_name  = "vm sa"
   description   = "VM Service account"
 }
