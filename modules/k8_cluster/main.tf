@@ -26,18 +26,14 @@ module "instance_template" {
 module "control_vm" {
   source            = "terraform-google-modules/vm/google//modules/compute_instance"
   hostname          = "perkunas-control"
+  add_hostname_suffix = false
   instance_template = module.instance_template.self_link
 }
 
 module "worker_vm1" {
   source            = "terraform-google-modules/vm/google//modules/compute_instance"
-  hostname          = "perkunas-control"
-  instance_template = module.instance_template.self_link
-}
-
-module "worker_vm2" {
-  source            = "terraform-google-modules/vm/google//modules/compute_instance"
-  hostname          = "perkunas-control"
+  hostname          = "perkunas-worker"
+  num_instances     = 2
   instance_template = module.instance_template.self_link
 }
 
