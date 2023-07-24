@@ -38,7 +38,7 @@ module "vpc" {
 }
 
 module "nat" {
-  source  = "terraform-google-modules/cloud-nat/google//examples/nat_with_compute_engine"
+  source  = "terraform-google-modules/cloud-nat/google"
   project_id     = local.project_id
   region = local.region
   name = "perkunas-nat"
