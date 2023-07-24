@@ -4,7 +4,7 @@ locals {
 }
 
 module "vpc" {
-  source = "./vpc"
+  source = "../vpc"
   project_id = var.project_id
   region = var.region
 }
