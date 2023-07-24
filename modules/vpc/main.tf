@@ -5,7 +5,6 @@ locals {
 
 module "vpc" {
     source  = "terraform-google-modules/network/google"
-    version = "~> 4.0"
 
     network_name = "perkunas-vpc"
     routing_mode = "REGIONAL"
@@ -38,13 +37,12 @@ module "vpc" {
     delete_default_internet_gateway_routes = true
 }
 
-# module "nat" {
-#   source  = "terraform-google-modules/cloud-nat/google//examples/nat_with_compute_engine"
-#   version = "4.1.0"
-#   project     = local.project_id
-#   region      = local.region
-#   subnet      = 
-# }
+module "nat" {
+  source  = "terraform-google-modules/cloud-nat/google//examples/nat_with_compute_engine"
+  project     = local.project_id
+  region      = local.region
+  subnet      = module.vpc.subnets_names[0]
+}
 
 resource "google_compute_firewall" "ssh" {
   project = local.project_id
