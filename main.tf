@@ -4,7 +4,7 @@ locals {
 }
 
 module "mig" {
-  source = "../modules/mig"
+  source = "./modules/mig"
   project_id = local.project_id
   region = local.region
 }
