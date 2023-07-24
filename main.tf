@@ -1,6 +1,6 @@
 locals {
   project_id = "tomasnar-test-terraform"
-  region = "asia-southeast1"
+  region = "us-east1"
 }
 
 module "mig" {
