@@ -34,7 +34,7 @@ module "vpc" {
     #         next_hop_internet      = "true"
     #     },
     # ]
-    delete_default_internet_gateway_routes = true
+    delete_default_internet_gateway_routes = false
 }
 
 module "nat" {
