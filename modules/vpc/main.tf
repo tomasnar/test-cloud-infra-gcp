@@ -39,9 +39,12 @@ module "vpc" {
 
 module "nat" {
   source  = "terraform-google-modules/cloud-nat/google//examples/nat_with_compute_engine"
-  project     = local.project_id
-  region      = local.region
-  subnet      = module.vpc.subnets_names[0]
+  project_id     = local.project_id
+  region = local.region
+  name = "perkunas-nat"
+  network = module.vpc.network_name
+  create_router = true
+  router = "perkunas-router"
 }
 
 resource "google_compute_firewall" "ssh" {
