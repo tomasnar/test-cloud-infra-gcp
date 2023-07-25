@@ -58,3 +58,17 @@ resource "google_compute_firewall" "ssh" {
   }
   source_ranges = ["35.235.240.0/20"]
 }
+
+resource "google_compute_firewall" "internal" {
+  project = local.project_id
+  name        = "internal-traffic"
+  network = module.vpc.network_name
+
+  allow {
+    protocol  = "tcp"
+#    ports     = ["80", "8080", "1000-2000"]
+  }
+
+  source_tags = ["k8s"]
+  target_tags = ["k8s"]
+}

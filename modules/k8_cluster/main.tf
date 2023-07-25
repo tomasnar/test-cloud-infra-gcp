@@ -17,6 +17,7 @@ module "instance_template" {
   source_image_project = "ubuntu-os-cloud"
   source_image_family  = "ubuntu-2204-lts"
   disk_size_gb         = 20
+  tags                = ["k8s"]
   service_account      = {
                            email = module.service_account.email
                            scopes = ["cloud-platform"]
