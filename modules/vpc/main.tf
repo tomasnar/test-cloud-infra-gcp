@@ -65,7 +65,7 @@ resource "google_compute_firewall" "internal" {
   network = module.vpc.network_name
 
   allow {
-#    protocol  = "tcp"
+    protocol  = "all"
 #    ports     = ["80", "8080", "1000-2000"]
   }
 
