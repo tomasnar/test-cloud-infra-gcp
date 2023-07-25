@@ -22,6 +22,9 @@ module "instance_template" {
                            email = module.service_account.email
                            scopes = ["cloud-platform"]
                          }
+  metadata = {
+    user-data = templatefile("../../templates/k8s_install.tpl")
+  }
 }
 
 module "control_vm" {
