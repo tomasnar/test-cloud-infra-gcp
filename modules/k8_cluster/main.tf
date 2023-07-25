@@ -23,7 +23,7 @@ module "instance_template" {
                            scopes = ["cloud-platform"]
                          }
   metadata = {
-    user-data = file("../templates/k8s_install.tpl")
+    user-data = templatefile("../../templates/k8s_install.tftpl", {})
   }
 }
 
